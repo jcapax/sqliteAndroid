@@ -47,7 +47,7 @@ public class BaseHelper extends SQLiteOpenHelper {
                 p.setNombre(c.getString(1));
                 p.setEdad(c.getInt(2));
 
-                lPer.add(p.toString());
+                lPer.add(p.getId()+" "+p.getNombre()+" "+p.getEdad());
             }
         }catch(Exception e){
 
