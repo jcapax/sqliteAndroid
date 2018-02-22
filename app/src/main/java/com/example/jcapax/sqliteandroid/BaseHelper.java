@@ -15,8 +15,26 @@ import java.util.ArrayList;
 public class BaseHelper extends SQLiteOpenHelper {
 
 
-    String sql_create_table = "CREATE TABLE personas(id integer primary key autoincrement, nombre text, edad int)";
-    String sql_drop_table = "DROP TABLE personas";
+    String sql_create_table_persona = "CREATE TABLE personas(" +
+            "id integer primary key autoincrement, " +
+            "nombre text, " +
+            "edad int)";
+
+    String sql_drop_table_persona = "DROP TABLE personas";
+
+    String sql_create_table_direccion = "CREATE TABLE direccion(" +
+            "id integer primary key autoincrement, " +
+            "idPersona integer, " +
+            "calle text)";
+
+    String sql_drop_table_direccion = "DROP TABLE direccion";
+
+    String sql_create_view_persona_direccion = "" +
+            "create view v_personadireccion as " +
+            "select p.id, p.nombre, d.calle" +
+            "from persona p join direccion d on " +
+            "p.id = d.idPersona";
+    String sql_drop_view_persona_direccion = "DROP VIEW v_personadireccion";
 
     public BaseHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -24,70 +42,25 @@ public class BaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(sql_create_table);
+        sqLiteDatabase.execSQL(sql_create_table_persona);
+        sqLiteDatabase.execSQL(sql_create_table_direccion);
+
+        sqLiteDatabase.execSQL(sql_create_view_persona_direccion);
+
+        //sqLiteDatabase.execSQL("insert into direccion(idPersona, calle) values(1, "+"cabrera"+")");
 
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL(sql_drop_table);
-        sqLiteDatabase.execSQL(sql_create_table);
+        sqLiteDatabase.execSQL(sql_drop_table_persona);
+        sqLiteDatabase.execSQL(sql_create_table_persona);
+
+        sqLiteDatabase.execSQL(sql_drop_table_direccion);
+        sqLiteDatabase.execSQL(sql_create_table_direccion);
+
+        sqLiteDatabase.execSQL(sql_drop_view_persona_direccion);
+        sqLiteDatabase.execSQL(sql_create_view_persona_direccion);
     }
 
-//    public ArrayList<String> listaPersonas(){
-//        ArrayList<String> lPer = new ArrayList<>();
-//
-////        BaseHelper bh = new BaseHelper(this, "Base", null, 2);
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        String sql = "select id, nombre, edad from personas";
-//        try{
-//            Cursor c = db.rawQuery(sql, null);
-//            while(c.moveToNext()){
-//                Persona p = new Persona();
-//                p.setId(c.getInt(0));
-//                p.setNombre(c.getString(1));
-//                p.setEdad(c.getInt(2));
-//
-//                lPer.add(p.getId()+" "+p.getNombre()+" "+p.getEdad());
-//            }
-//        }catch(Exception e){
-//
-//        }
-//        return lPer;
-//    }
-
-    public boolean UpdatePersona(int id){
-        boolean aux = false;
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        try {
-            String sql = "update personas set edad = 79 where id = " + String.valueOf(id);
-            db.execSQL(sql);
-            db.close();
-            aux = true;
-        }catch (Exception e){
-
-        }
-
-        return aux;
-    }
-
-    public boolean guardar(String nombre, int edad){
-        boolean aux = false;
-
-        SQLiteDatabase sqlData = this.getWritableDatabase();
-        try {
-            ContentValues c = new ContentValues();
-            c.put("nombre", nombre);
-            c.put("edad", edad);
-            sqlData.insert("personas", null, c);
-            sqlData.close();
-
-            aux = true;
-        }catch (Exception e){
-
-        }
-
-        return aux;
-    }
 }

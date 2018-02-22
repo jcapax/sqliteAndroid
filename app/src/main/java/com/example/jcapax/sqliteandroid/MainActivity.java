@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnMostrar;
     Button btnActualizar;
     BaseHelper bh;
+    PersonaLogic pm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         btnActualizar = (Button) findViewById(R.id.btnUpdate);
 
         bh = new BaseHelper(this, "Base", null, 2);
+        pm = new PersonaLogic(bh);
 
         btnGuardar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void guardar(String nombre, int edad) {
 
-        boolean aux = bh.guardar(nombre, edad);
+        boolean aux = pm.guardar(nombre, edad);
         if(aux){
             txtNombre.setText("");
             txtEdad.setText("");
@@ -75,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void actualizar(){
-        boolean aux = bh.UpdatePersona(1);
+        boolean aux = pm.UpdatePersona(1);
         if(aux){
             Toast.makeText(this, "registro actualizado", Toast.LENGTH_SHORT).show();
         }else{

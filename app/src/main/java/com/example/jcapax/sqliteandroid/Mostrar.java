@@ -1,15 +1,14 @@
 package com.example.jcapax.sqliteandroid;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -17,7 +16,7 @@ public class Mostrar extends AppCompatActivity {
 
     ListView lvPersonas;
     BaseHelper bh;
-    PersonaModel pm;
+    PersonaLogic pm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +24,7 @@ public class Mostrar extends AppCompatActivity {
         setContentView(R.layout.activity_mostrar);
 
         bh = new BaseHelper(this, "Base", null, 2);
-        pm = new PersonaModel(bh);
+        pm = new PersonaLogic(bh);
 
         lvPersonas = (ListView) findViewById(R.id.lvPersonas);
         ArrayList<String> datos = pm.listaPersonas();
@@ -34,6 +33,22 @@ public class Mostrar extends AppCompatActivity {
             CustomAdapter customAdapter = new CustomAdapter(datos, nroRegistros);
             lvPersonas.setAdapter(customAdapter);
         }
+
+        lvPersonas.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                TextView id = (TextView) view.findViewById(R.id.txtView_id);
+                TextView labelDetalle = (TextView) view.findViewById(R.id.txtView_detalle);
+//                Toast.makeText(getApplicationContext(), labelDetalle.getText(), Toast.LENGTH_SHORT).show();
+                DireccionLogic dl = new DireccionLogic(bh);
+                String id_per = (String) id.getText();
+                ArrayList<String> dd = dl.listaDireccion(id_per);
+                System.out.println("cantidad de reg encontrados: "+dd.size());
+                for (int j = 0; j < dd.size(); j++){
+                    Toast.makeText(getApplicationContext(), dd.get(j), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 
