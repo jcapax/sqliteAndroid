@@ -17,6 +17,7 @@ public class Mostrar extends AppCompatActivity {
 
     ListView lvPersonas;
     BaseHelper bh;
+    PersonaModel pm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +25,10 @@ public class Mostrar extends AppCompatActivity {
         setContentView(R.layout.activity_mostrar);
 
         bh = new BaseHelper(this, "Base", null, 2);
+        pm = new PersonaModel(bh);
 
         lvPersonas = (ListView) findViewById(R.id.lvPersonas);
-        ArrayList<String> datos = bh.listaPersonas();
+        ArrayList<String> datos = pm.listaPersonas();
         int nroRegistros = datos.size();
         if(nroRegistros > 0) {
             CustomAdapter customAdapter = new CustomAdapter(datos, nroRegistros);
